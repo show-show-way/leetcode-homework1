@@ -1,0 +1,39 @@
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+bool compareClips(const vector<int>& a, const vector<int>& b) {
+    return a[0] < b[0];
+}
+
+class Solution {
+public:
+    int videoStitching(vector<vector<int>>& clips, int time) {
+        sort(clips.begin(), clips.end(), compareClips);
+        int currEnd = 0, farthestEnd = 0, clipCount = 0, i = 0;
+
+        while (i < clips.size() && currEnd < time) {
+            bool found = false;
+            while (i < clips.size() && clips[i][0] <= currEnd) {
+                farthestEnd = max(farthestEnd, clips[i][1]);
+                found = true;
+                i++;
+            }
+
+            if (!found) {
+                return -1;
+            }
+
+            currEnd = farthestEnd;
+            clipCount++;
+        }
+
+        if (currEnd < time) {
+            return -1;
+        }
+
+        return clipCount;
+    }
+};
